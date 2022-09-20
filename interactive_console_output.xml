@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 5.0.1 (Python 3.9.13 on win32)" generated="20220919 13:08:49.330" rpa="false" schemaversion="3">
+<suite id="s1" name="Robot Interactive Console" source="c:\Users\OS\.vscode\extensions\robocorp.robotframework-lsp-1.1.3\src\robotframework_ls\vendored\robotframework_interactive\robot_interactive_console.robot">
+<test id="s1-t1" name="Default Task/Test" line="5">
+<kw name="Interpreter Main Loop" library="MainLoop">
+<kw name="For Each Input Work Item">
+<arg>Process traffic data</arg>
+<msg timestamp="20220919 13:08:49.779" level="FAIL">No keyword with name 'For Each Input Work Item' found.</msg>
+<status status="FAIL" starttime="20220919 13:08:49.779" endtime="20220919 13:08:49.779"/>
+</kw>
+<status status="PASS" starttime="20220919 13:08:49.354" endtime="20220919 13:08:51.201"/>
+</kw>
+<status status="PASS" starttime="20220919 13:08:49.354" endtime="20220919 13:08:51.201"/>
+</test>
+<status status="PASS" starttime="20220919 13:08:49.330" endtime="20220919 13:08:51.202"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="Robot Interactive Console">Robot Interactive Console</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

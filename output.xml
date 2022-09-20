@@ -1,0 +1,1944 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 5.0.1 (Python 3.9.13 on win32)" generated="20220919 15:53:20.820" rpa="true" schemaversion="3">
+<suite id="s1" name="Producer" source="d:\RPA\producer-consumer\producer.robot">
+<test id="s1-t1" name="Produce traffic data work items" line="20">
+<kw name="Download traffic data">
+<kw name="Download" library="RPA.HTTP">
+<arg>https://github.com/robocorp/inhuman-insurance-inc/raw/main/RS_198.json</arg>
+<arg>${TRAFFIC_JSON_FILE_PATH}</arg>
+<arg>overwrite=True</arg>
+<doc>An alias for the ``HTTP Get`` keyword.</doc>
+<msg timestamp="20220919 15:53:21.547" level="INFO">Creating a new HTTP session</msg>
+<msg timestamp="20220919 15:53:21.557" level="INFO">Creating Session using : alias=rpasession_alias.httpsgithub.com, url=https://github.com, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<status status="PASS" starttime="20220919 15:53:21.546" endtime="20220919 15:53:35.524"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:21.546" endtime="20220919 15:53:35.524"/>
+</kw>
+<kw name="Load traffic data as table">
+<var>${traffic_data}</var>
+<kw name="Load JSON from file" library="RPA.JSON">
+<var>${json}</var>
+<arg>${TRAFFIC_JSON_FILE_PATH}</arg>
+<doc>Load JSON data from a file, and return it as JSON serializable object.
+Depending on the input file the object can be either a dictionary,
+a list, or a scalar value.</doc>
+<msg timestamp="20220919 15:53:35.525" level="INFO">Loading JSON from file: D:\RPA\producer-consumer\traffic.json</msg>
+<msg timestamp="20220919 15:53:35.623" level="INFO">${json} = {'@odata.context': 'https://ghoapi.azureedge.net/api/$metadata#RS_198', 'value': [{'Id': 25257658, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'AFG', 'TimeDimType': 'YEAR', '...</msg>
+<status status="PASS" starttime="20220919 15:53:35.525" endtime="20220919 15:53:35.623"/>
+</kw>
+<kw name="Create Table" library="RPA.Tables">
+<var>${table}</var>
+<arg>${json}[value]</arg>
+<doc>Create Table object from data.</doc>
+<msg timestamp="20220919 15:53:35.762" level="INFO">Created table: Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value', 'NumericValue', 'Low', 'High', 'Comments', 'Date', 'TimeDimensionValue', 'TimeDimensionBegin', 'TimeDimensionEnd'], rows=11640)</msg>
+<msg timestamp="20220919 15:53:35.763" level="INFO">${table} = Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</msg>
+<status status="PASS" starttime="20220919 15:53:35.623" endtime="20220919 15:53:35.763"/>
+</kw>
+<return>
+<value>${table}</value>
+<status status="PASS" starttime="20220919 15:53:35.763" endtime="20220919 15:53:35.763"/>
+</return>
+<msg timestamp="20220919 15:53:35.763" level="INFO">${traffic_data} = Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</msg>
+<status status="PASS" starttime="20220919 15:53:35.524" endtime="20220919 15:53:35.763"/>
+</kw>
+<kw name="Filter and sort traffic data">
+<var>${filtered_data}</var>
+<arg>${traffic_data}</arg>
+<kw name="Set Variable" library="BuiltIn">
+<var>${max_rate}</var>
+<arg>${5.0}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220919 15:53:35.765" level="INFO">${max_rate} = 5.0</msg>
+<status status="PASS" starttime="20220919 15:53:35.764" endtime="20220919 15:53:35.765"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${both_genders}</var>
+<arg>BTSX</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220919 15:53:35.765" level="INFO">${both_genders} = BTSX</msg>
+<status status="PASS" starttime="20220919 15:53:35.765" endtime="20220919 15:53:35.765"/>
+</kw>
+<kw name="Filter Table By Column" library="RPA.Tables">
+<arg>${table}</arg>
+<arg>${RATE_KEY}</arg>
+<arg>&lt;</arg>
+<arg>${max_rate}</arg>
+<doc>Remove all rows where column values don't match the
+given condition.</doc>
+<msg timestamp="20220919 15:53:35.783" level="INFO">Filtered -10339 rows</msg>
+<status status="PASS" starttime="20220919 15:53:35.765" endtime="20220919 15:53:35.783"/>
+</kw>
+<kw name="Filter Table By Column" library="RPA.Tables">
+<arg>${table}</arg>
+<arg>${GENDER_KEY}</arg>
+<arg>==</arg>
+<arg>${both_genders}</arg>
+<doc>Remove all rows where column values don't match the
+given condition.</doc>
+<msg timestamp="20220919 15:53:35.785" level="INFO">Filtered -1056 rows</msg>
+<status status="PASS" starttime="20220919 15:53:35.783" endtime="20220919 15:53:35.785"/>
+</kw>
+<kw name="Sort Table By Column" library="RPA.Tables">
+<arg>${table}</arg>
+<arg>${YEAR_KEY}</arg>
+<arg>False</arg>
+<doc>Sort a table in-place according to ``column``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.785" endtime="20220919 15:53:35.786"/>
+</kw>
+<return>
+<value>${table}</value>
+<status status="PASS" starttime="20220919 15:53:35.786" endtime="20220919 15:53:35.786"/>
+</return>
+<msg timestamp="20220919 15:53:35.786" level="INFO">${filtered_data} = Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</msg>
+<status status="PASS" starttime="20220919 15:53:35.764" endtime="20220919 15:53:35.786"/>
+</kw>
+<kw name="Get latest data by country">
+<var>${filtered_data}</var>
+<arg>${filtered_data}</arg>
+<kw name="Group Table By Column" library="RPA.Tables">
+<var>${table}</var>
+<arg>${table}</arg>
+<arg>${COUNTRY_KEY}</arg>
+<doc>Group a table by ``column`` and return a list of grouped Tables.</doc>
+<msg timestamp="20220919 15:53:35.793" level="INFO">Found 30 groups</msg>
+<msg timestamp="20220919 15:53:35.794" level="INFO">${table} = [Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Valu...</msg>
+<status status="PASS" starttime="20220919 15:53:35.787" endtime="20220919 15:53:35.794"/>
+</kw>
+<kw name="Create List" library="BuiltIn">
+<var>${latest_data_by_country}</var>
+<doc>Returns a list containing given items.</doc>
+<msg timestamp="20220919 15:53:35.794" level="INFO">${latest_data_by_country} = []</msg>
+<status status="PASS" starttime="20220919 15:53:35.794" endtime="20220919 15:53:35.794"/>
+</kw>
+<for flavor="IN">
+<var>${group}</var>
+<value>@{table}</value>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.795" level="INFO">${first_row} = {'Id': 25414305, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'VCT', 'TimeDimType': 'YEAR', 'TimeDim': 2011, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.794" endtime="20220919 15:53:35.795"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.795" endtime="20220919 15:53:35.795"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.794" endtime="20220919 15:53:35.795"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.796" level="INFO">${first_row} = {'Id': 25396290, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'SWError', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': N...</msg>
+<status status="PASS" starttime="20220919 15:53:35.795" endtime="20220919 15:53:35.796"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.796" endtime="20220919 15:53:35.796"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.795" endtime="20220919 15:53:35.796"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.797" level="INFO">${first_row} = {'Id': 25396263, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'SWE', 'TimeDimType': 'YEAR', 'TimeDim': 2018, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.796" endtime="20220919 15:53:35.797"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.797" endtime="20220919 15:53:35.797"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.796" endtime="20220919 15:53:35.797"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.797" level="INFO">${first_row} = {'Id': 25395399, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'SVN', 'TimeDimType': 'YEAR', 'TimeDim': 2018, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.797" endtime="20220919 15:53:35.797"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.798" endtime="20220919 15:53:35.798"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.797" endtime="20220919 15:53:35.798"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.798" level="INFO">${first_row} = {'Id': 25386375, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'SGP', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.798" endtime="20220919 15:53:35.798"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.798" endtime="20220919 15:53:35.799"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.798" endtime="20220919 15:53:35.799"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.799" level="INFO">${first_row} = {'Id': 25368358, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'NOR', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.799" endtime="20220919 15:53:35.799"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.799" endtime="20220919 15:53:35.800"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.799" endtime="20220919 15:53:35.800"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.800" level="INFO">${first_row} = {'Id': 25367485, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'NLD', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.800" endtime="20220919 15:53:35.800"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.800" endtime="20220919 15:53:35.800"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.800" endtime="20220919 15:53:35.801"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.801" level="INFO">${first_row} = {'Id': 25355795, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'MLT', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.801" endtime="20220919 15:53:35.801"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.801" endtime="20220919 15:53:35.801"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.801" endtime="20220919 15:53:35.801"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.802" level="INFO">${first_row} = {'Id': 25352172, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'MDV', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.802" endtime="20220919 15:53:35.802"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.802" endtime="20220919 15:53:35.802"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.801" endtime="20220919 15:53:35.803"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.803" level="INFO">${first_row} = {'Id': 25347667, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'LUX', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.803" endtime="20220919 15:53:35.803"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.803" endtime="20220919 15:53:35.803"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.803" endtime="20220919 15:53:35.803"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.804" level="INFO">${first_row} = {'Id': 25344109, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'LCA', 'TimeDimType': 'YEAR', 'TimeDim': 2008, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.804" endtime="20220919 15:53:35.804"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.804" endtime="20220919 15:53:35.804"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.804" endtime="20220919 15:53:35.804"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.805" level="INFO">${first_row} = {'Id': 25337776, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'KIR', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.805" endtime="20220919 15:53:35.805"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.805" endtime="20220919 15:53:35.805"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.805" endtime="20220919 15:53:35.805"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.806" level="INFO">${first_row} = {'Id': 25333279, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'JPN', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.806" endtime="20220919 15:53:35.806"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.806" endtime="20220919 15:53:35.806"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.806" endtime="20220919 15:53:35.806"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.807" level="INFO">${first_row} = {'Id': 25329697, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'ISR', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.807" endtime="20220919 15:53:35.807"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.807" endtime="20220919 15:53:35.807"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.806" endtime="20220919 15:53:35.807"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.808" level="INFO">${first_row} = {'Id': 25328814, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'ISL', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.807" endtime="20220919 15:53:35.808"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.808" endtime="20220919 15:53:35.808"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.807" endtime="20220919 15:53:35.808"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.809" level="INFO">${first_row} = {'Id': 25326084, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'IRL', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.808" endtime="20220919 15:53:35.809"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.809" endtime="20220919 15:53:35.809"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.808" endtime="20220919 15:53:35.809"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.810" level="INFO">${first_row} = {'Id': 25318901, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'GTM', 'TimeDimType': 'YEAR', 'TimeDim': 2006, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.809" endtime="20220919 15:53:35.810"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.810" endtime="20220919 15:53:35.810"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.809" endtime="20220919 15:53:35.810"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.811" level="INFO">${first_row} = {'Id': 25317960, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'GRD', 'TimeDimType': 'YEAR', 'TimeDim': 2014, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.810" endtime="20220919 15:53:35.811"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.811" endtime="20220919 15:53:35.811"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.810" endtime="20220919 15:53:35.811"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.811" level="INFO">${first_row} = {'Id': 25310762, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'GBR', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.811" endtime="20220919 15:53:35.811"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.812" endtime="20220919 15:53:35.812"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.811" endtime="20220919 15:53:35.812"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.812" level="INFO">${first_row} = {'Id': 25308972, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'FSM', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.812" endtime="20220919 15:53:35.812"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.812" endtime="20220919 15:53:35.813"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.812" endtime="20220919 15:53:35.813"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.813" level="INFO">${first_row} = {'Id': 25306262, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'FIN', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.813" endtime="20220919 15:53:35.813"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.813" endtime="20220919 15:53:35.814"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.813" endtime="20220919 15:53:35.814"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.814" level="INFO">${first_row} = {'Id': 25304500, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'EST', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.814" endtime="20220919 15:53:35.814"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.814" endtime="20220919 15:53:35.814"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.814" endtime="20220919 15:53:35.815"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.815" level="INFO">${first_row} = {'Id': 25303612, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'ESP', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.815" endtime="20220919 15:53:35.815"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.815" endtime="20220919 15:53:35.815"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.815" endtime="20220919 15:53:35.816"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.816" level="INFO">${first_row} = {'Id': 25298206, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'DNK', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.816" endtime="20220919 15:53:35.816"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.816" endtime="20220919 15:53:35.817"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.816" endtime="20220919 15:53:35.817"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.817" level="INFO">${first_row} = {'Id': 25296399, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'DEU', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.817" endtime="20220919 15:53:35.817"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.817" endtime="20220919 15:53:35.817"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.817" endtime="20220919 15:53:35.818"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.818" level="INFO">${first_row} = {'Id': 25294595, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'CYP', 'TimeDimType': 'YEAR', 'TimeDim': 2013, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.818" endtime="20220919 15:53:35.818"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.818" endtime="20220919 15:53:35.818"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.818" endtime="20220919 15:53:35.818"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.819" level="INFO">${first_row} = {'Id': 25283809, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'CHE', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.819" endtime="20220919 15:53:35.819"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.819" endtime="20220919 15:53:35.819"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.819" endtime="20220919 15:53:35.819"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.820" level="INFO">${first_row} = {'Id': 25264908, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'AUT', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.820" endtime="20220919 15:53:35.820"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.820" endtime="20220919 15:53:35.820"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.819" endtime="20220919 15:53:35.820"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.821" level="INFO">${first_row} = {'Id': 25263981, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'AUS', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.821" endtime="20220919 15:53:35.821"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.821" endtime="20220919 15:53:35.821"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.820" endtime="20220919 15:53:35.821"/>
+</iter>
+<iter>
+<var name="${group}">Table(columns=['Id', 'IndicatorCode', 'SpatialDimType', 'SpatialDim', 'TimeDimType', 'TimeDim', 'Dim1Type', 'Dim1', 'Dim2Type', 'Dim2', 'Dim3Type', 'Dim3', 'DataSourceDimType', 'DataSourceDim', 'Value...</var>
+<kw name="Pop Table Row" library="RPA.Tables">
+<var>${first_row}</var>
+<arg>${group}</arg>
+<doc>Remove row from table and return it.</doc>
+<msg timestamp="20220919 15:53:35.822" level="INFO">${first_row} = {'Id': 25263077, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'ATG', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</msg>
+<status status="PASS" starttime="20220919 15:53:35.822" endtime="20220919 15:53:35.822"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${latest_data_by_country}</arg>
+<arg>${first_row}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.822" endtime="20220919 15:53:35.822"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.821" endtime="20220919 15:53:35.822"/>
+</iter>
+<status status="PASS" starttime="20220919 15:53:35.794" endtime="20220919 15:53:35.822"/>
+</for>
+<return>
+<value>${latest_data_by_country}</value>
+<status status="PASS" starttime="20220919 15:53:35.822" endtime="20220919 15:53:35.823"/>
+</return>
+<msg timestamp="20220919 15:53:35.823" level="INFO">${filtered_data} = [{'Id': 25414305, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'VCT', 'TimeDimType': 'YEAR', 'TimeDim': 2011, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None...</msg>
+<status status="PASS" starttime="20220919 15:53:35.787" endtime="20220919 15:53:35.823"/>
+</kw>
+<kw name="Create work item payloads">
+<var>${payloads}</var>
+<arg>${filtered_data}</arg>
+<kw name="Create List" library="BuiltIn">
+<var>${payloads}</var>
+<doc>Returns a list containing given items.</doc>
+<msg timestamp="20220919 15:53:35.824" level="INFO">${payloads} = []</msg>
+<status status="PASS" starttime="20220919 15:53:35.824" endtime="20220919 15:53:35.824"/>
+</kw>
+<for flavor="IN">
+<var>${row}</var>
+<value>@{traffic_data}</value>
+<iter>
+<var name="${row}">{'Id': 25414305, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'VCT', 'TimeDimType': 'YEAR', 'TimeDim': 2011, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.825" level="INFO">${payload} = {'country': 'VCT', 'year': 2011, 'rate': 3.69293}</msg>
+<status status="PASS" starttime="20220919 15:53:35.824" endtime="20220919 15:53:35.825"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.825" endtime="20220919 15:53:35.825"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.824" endtime="20220919 15:53:35.825"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25396290, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'SWError', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': N...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.826" level="INFO">${payload} = {'country': 'SWError', 'year': 2019, 'rate': 3.13947}</msg>
+<status status="PASS" starttime="20220919 15:53:35.826" endtime="20220919 15:53:35.826"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.826" endtime="20220919 15:53:35.827"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.826" endtime="20220919 15:53:35.827"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25396263, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'SWE', 'TimeDimType': 'YEAR', 'TimeDim': 2018, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.827" level="INFO">${payload} = {'country': 'SWE', 'year': 2018, 'rate': 3.61718}</msg>
+<status status="PASS" starttime="20220919 15:53:35.827" endtime="20220919 15:53:35.827"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.827" endtime="20220919 15:53:35.828"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.827" endtime="20220919 15:53:35.828"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25395399, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'SVN', 'TimeDimType': 'YEAR', 'TimeDim': 2018, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.828" level="INFO">${payload} = {'country': 'SVN', 'year': 2018, 'rate': 4.52394}</msg>
+<status status="PASS" starttime="20220919 15:53:35.828" endtime="20220919 15:53:35.828"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.829" endtime="20220919 15:53:35.829"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.828" endtime="20220919 15:53:35.829"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25386375, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'SGP', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.830" level="INFO">${payload} = {'country': 'SGP', 'year': 2019, 'rate': 2.08609}</msg>
+<status status="PASS" starttime="20220919 15:53:35.829" endtime="20220919 15:53:35.830"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.830" endtime="20220919 15:53:35.830"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.829" endtime="20220919 15:53:35.830"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25368358, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'NOR', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.831" level="INFO">${payload} = {'country': 'NOR', 'year': 2019, 'rate': 2.12302}</msg>
+<status status="PASS" starttime="20220919 15:53:35.830" endtime="20220919 15:53:35.831"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.831" endtime="20220919 15:53:35.831"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.830" endtime="20220919 15:53:35.831"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25367485, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'NLD', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.832" level="INFO">${payload} = {'country': 'NLD', 'year': 2019, 'rate': 3.98313}</msg>
+<status status="PASS" starttime="20220919 15:53:35.831" endtime="20220919 15:53:35.832"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.832" endtime="20220919 15:53:35.832"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.831" endtime="20220919 15:53:35.832"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25355795, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'MLT', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.833" level="INFO">${payload} = {'country': 'MLT', 'year': 2019, 'rate': 4.10715}</msg>
+<status status="PASS" starttime="20220919 15:53:35.833" endtime="20220919 15:53:35.833"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.833" endtime="20220919 15:53:35.834"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.832" endtime="20220919 15:53:35.834"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25352172, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'MDV', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.834" level="INFO">${payload} = {'country': 'MDV', 'year': 2019, 'rate': 1.6277}</msg>
+<status status="PASS" starttime="20220919 15:53:35.834" endtime="20220919 15:53:35.834"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.835" endtime="20220919 15:53:35.835"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.834" endtime="20220919 15:53:35.835"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25347667, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'LUX', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.836" level="INFO">${payload} = {'country': 'LUX', 'year': 2019, 'rate': 4.07499}</msg>
+<status status="PASS" starttime="20220919 15:53:35.835" endtime="20220919 15:53:35.836"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.836" endtime="20220919 15:53:35.836"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.835" endtime="20220919 15:53:35.836"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25344109, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'LCA', 'TimeDimType': 'YEAR', 'TimeDim': 2008, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.837" level="INFO">${payload} = {'country': 'LCA', 'year': 2008, 'rate': 3.52918}</msg>
+<status status="PASS" starttime="20220919 15:53:35.836" endtime="20220919 15:53:35.837"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.837" endtime="20220919 15:53:35.837"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.836" endtime="20220919 15:53:35.837"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25337776, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'KIR', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.838" level="INFO">${payload} = {'country': 'KIR', 'year': 2019, 'rate': 1.92481}</msg>
+<status status="PASS" starttime="20220919 15:53:35.838" endtime="20220919 15:53:35.838"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.838" endtime="20220919 15:53:35.838"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.837" endtime="20220919 15:53:35.839"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25333279, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'JPN', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.839" level="INFO">${payload} = {'country': 'JPN', 'year': 2019, 'rate': 3.59908}</msg>
+<status status="PASS" starttime="20220919 15:53:35.839" endtime="20220919 15:53:35.839"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.839" endtime="20220919 15:53:35.840"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.839" endtime="20220919 15:53:35.840"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25329697, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'ISR', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.840" level="INFO">${payload} = {'country': 'ISR', 'year': 2019, 'rate': 3.90874}</msg>
+<status status="PASS" starttime="20220919 15:53:35.840" endtime="20220919 15:53:35.840"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.841" endtime="20220919 15:53:35.841"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.840" endtime="20220919 15:53:35.841"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25328814, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'ISL', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.842" level="INFO">${payload} = {'country': 'ISL', 'year': 2019, 'rate': 2.04915}</msg>
+<status status="PASS" starttime="20220919 15:53:35.841" endtime="20220919 15:53:35.842"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.842" endtime="20220919 15:53:35.842"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.841" endtime="20220919 15:53:35.842"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25326084, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'IRL', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.843" level="INFO">${payload} = {'country': 'IRL', 'year': 2019, 'rate': 3.13364}</msg>
+<status status="PASS" starttime="20220919 15:53:35.843" endtime="20220919 15:53:35.843"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.843" endtime="20220919 15:53:35.844"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.843" endtime="20220919 15:53:35.844"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25318901, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'GTM', 'TimeDimType': 'YEAR', 'TimeDim': 2006, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.844" level="INFO">${payload} = {'country': 'GTM', 'year': 2006, 'rate': 4.61297}</msg>
+<status status="PASS" starttime="20220919 15:53:35.844" endtime="20220919 15:53:35.844"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.844" endtime="20220919 15:53:35.845"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.844" endtime="20220919 15:53:35.845"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25317960, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'GRD', 'TimeDimType': 'YEAR', 'TimeDim': 2014, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.845" level="INFO">${payload} = {'country': 'GRD', 'year': 2014, 'rate': 4.59137}</msg>
+<status status="PASS" starttime="20220919 15:53:35.845" endtime="20220919 15:53:35.845"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.846" endtime="20220919 15:53:35.846"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.845" endtime="20220919 15:53:35.846"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25310762, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'GBR', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.847" level="INFO">${payload} = {'country': 'GBR', 'year': 2019, 'rate': 3.21187}</msg>
+<status status="PASS" starttime="20220919 15:53:35.846" endtime="20220919 15:53:35.847"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.847" endtime="20220919 15:53:35.847"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.846" endtime="20220919 15:53:35.847"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25308972, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'FSM', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.848" level="INFO">${payload} = {'country': 'FSM', 'year': 2019, 'rate': 0.15972}</msg>
+<status status="PASS" starttime="20220919 15:53:35.847" endtime="20220919 15:53:35.848"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.848" endtime="20220919 15:53:35.848"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.847" endtime="20220919 15:53:35.848"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25306262, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'FIN', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.849" level="INFO">${payload} = {'country': 'FIN', 'year': 2019, 'rate': 3.88637}</msg>
+<status status="PASS" starttime="20220919 15:53:35.848" endtime="20220919 15:53:35.849"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.849" endtime="20220919 15:53:35.849"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.848" endtime="20220919 15:53:35.849"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25304500, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'EST', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.850" level="INFO">${payload} = {'country': 'EST', 'year': 2019, 'rate': 4.46408}</msg>
+<status status="PASS" starttime="20220919 15:53:35.849" endtime="20220919 15:53:35.850"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.850" endtime="20220919 15:53:35.850"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.849" endtime="20220919 15:53:35.850"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25303612, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'ESP', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.851" level="INFO">${payload} = {'country': 'ESP', 'year': 2019, 'rate': 3.91405}</msg>
+<status status="PASS" starttime="20220919 15:53:35.851" endtime="20220919 15:53:35.851"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.852" endtime="20220919 15:53:35.852"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.851" endtime="20220919 15:53:35.852"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25298206, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'DNK', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.853" level="INFO">${payload} = {'country': 'DNK', 'year': 2019, 'rate': 3.69833}</msg>
+<status status="PASS" starttime="20220919 15:53:35.852" endtime="20220919 15:53:35.853"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.853" endtime="20220919 15:53:35.853"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.852" endtime="20220919 15:53:35.853"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25296399, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'DEU', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.854" level="INFO">${payload} = {'country': 'DEU', 'year': 2019, 'rate': 3.78353}</msg>
+<status status="PASS" starttime="20220919 15:53:35.853" endtime="20220919 15:53:35.854"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.854" endtime="20220919 15:53:35.854"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.853" endtime="20220919 15:53:35.854"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25294595, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'CYP', 'TimeDimType': 'YEAR', 'TimeDim': 2013, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.855" level="INFO">${payload} = {'country': 'CYP', 'year': 2013, 'rate': 4.9831}</msg>
+<status status="PASS" starttime="20220919 15:53:35.855" endtime="20220919 15:53:35.855"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.855" endtime="20220919 15:53:35.855"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.854" endtime="20220919 15:53:35.856"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25283809, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'CHE', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.856" level="INFO">${payload} = {'country': 'CHE', 'year': 2019, 'rate': 2.24644}</msg>
+<status status="PASS" starttime="20220919 15:53:35.856" endtime="20220919 15:53:35.856"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.856" endtime="20220919 15:53:35.857"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.856" endtime="20220919 15:53:35.857"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25264908, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'AUT', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.857" level="INFO">${payload} = {'country': 'AUT', 'year': 2019, 'rate': 4.86592}</msg>
+<status status="PASS" starttime="20220919 15:53:35.857" endtime="20220919 15:53:35.857"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.858" endtime="20220919 15:53:35.858"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.857" endtime="20220919 15:53:35.858"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25263981, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'AUS', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.859" level="INFO">${payload} = {'country': 'AUS', 'year': 2019, 'rate': 4.93914}</msg>
+<status status="PASS" starttime="20220919 15:53:35.858" endtime="20220919 15:53:35.859"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.859" endtime="20220919 15:53:35.859"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.858" endtime="20220919 15:53:35.859"/>
+</iter>
+<iter>
+<var name="${row}">{'Id': 25263077, 'IndicatorCode': 'RS_198', 'SpatialDimType': 'COUNTRY', 'SpatialDim': 'ATG', 'TimeDimType': 'YEAR', 'TimeDim': 2019, 'Dim1Type': 'SEX', 'Dim1': 'BTSX', 'Dim2Type': None, 'Dim2': None,...</var>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${payload}</var>
+<arg>country=${row}[${COUNTRY_KEY}]</arg>
+<arg>year=${row}[${YEAR_KEY}]</arg>
+<arg>rate=${row}[${RATE_KEY}]</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.860" level="INFO">${payload} = {'country': 'ATG', 'year': 2019, 'rate': 0.0}</msg>
+<status status="PASS" starttime="20220919 15:53:35.859" endtime="20220919 15:53:35.860"/>
+</kw>
+<kw name="Append To List" library="Collections">
+<arg>${payloads}</arg>
+<arg>${payload}</arg>
+<doc>Adds ``values`` to the end of ``list``.</doc>
+<status status="PASS" starttime="20220919 15:53:35.860" endtime="20220919 15:53:35.860"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.859" endtime="20220919 15:53:35.860"/>
+</iter>
+<status status="PASS" starttime="20220919 15:53:35.824" endtime="20220919 15:53:35.860"/>
+</for>
+<return>
+<value>${payloads}</value>
+<status status="PASS" starttime="20220919 15:53:35.860" endtime="20220919 15:53:35.861"/>
+</return>
+<msg timestamp="20220919 15:53:35.861" level="INFO">${payloads} = [{'country': 'VCT', 'year': 2011, 'rate': 3.69293}, {'country': 'SWError', 'year': 2019, 'rate': 3.13947}, {'country': 'SWE', 'year': 2018, 'rate': 3.61718}, {'country': 'SVN', 'year': 2018, 'rate': 4...</msg>
+<status status="PASS" starttime="20220919 15:53:35.824" endtime="20220919 15:53:35.861"/>
+</kw>
+<kw name="Save work item payloads">
+<arg>${payloads}</arg>
+<for flavor="IN">
+<var>${payload}</var>
+<value>@{payloads}</value>
+<iter>
+<var name="${payload}">{'country': 'VCT', 'year': 2011, 'rate': 3.69293}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.862" level="INFO">${variables} = {'traffic_data': {'country': 'VCT', 'year': 2011, 'rate': 3.69293}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.862" endtime="20220919 15:53:35.863"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.863" level="INFO">traffic_data = {'country': 'VCT', 'year': 2011, 'rate': 3.69293}</msg>
+<msg timestamp="20220919 15:53:35.864" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.863" endtime="20220919 15:53:35.864"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.862" endtime="20220919 15:53:35.864"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.862" endtime="20220919 15:53:35.864"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'SWError', 'year': 2019, 'rate': 3.13947}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.865" level="INFO">${variables} = {'traffic_data': {'country': 'SWError', 'year': 2019, 'rate': 3.13947}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.865" endtime="20220919 15:53:35.865"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.866" level="INFO">traffic_data = {'country': 'SWError', 'year': 2019, 'rate': 3.13947}</msg>
+<msg timestamp="20220919 15:53:35.866" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.866" endtime="20220919 15:53:35.866"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.865" endtime="20220919 15:53:35.867"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.865" endtime="20220919 15:53:35.867"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'SWE', 'year': 2018, 'rate': 3.61718}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.868" level="INFO">${variables} = {'traffic_data': {'country': 'SWE', 'year': 2018, 'rate': 3.61718}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.867" endtime="20220919 15:53:35.868"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.868" level="INFO">traffic_data = {'country': 'SWE', 'year': 2018, 'rate': 3.61718}</msg>
+<msg timestamp="20220919 15:53:35.868" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.868" endtime="20220919 15:53:35.869"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.867" endtime="20220919 15:53:35.869"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.867" endtime="20220919 15:53:35.869"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'SVN', 'year': 2018, 'rate': 4.52394}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.870" level="INFO">${variables} = {'traffic_data': {'country': 'SVN', 'year': 2018, 'rate': 4.52394}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.869" endtime="20220919 15:53:35.870"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.870" level="INFO">traffic_data = {'country': 'SVN', 'year': 2018, 'rate': 4.52394}</msg>
+<msg timestamp="20220919 15:53:35.871" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.870" endtime="20220919 15:53:35.871"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.869" endtime="20220919 15:53:35.871"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.869" endtime="20220919 15:53:35.871"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'SGP', 'year': 2019, 'rate': 2.08609}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.873" level="INFO">${variables} = {'traffic_data': {'country': 'SGP', 'year': 2019, 'rate': 2.08609}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.872" endtime="20220919 15:53:35.873"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.873" level="INFO">traffic_data = {'country': 'SGP', 'year': 2019, 'rate': 2.08609}</msg>
+<msg timestamp="20220919 15:53:35.874" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.873" endtime="20220919 15:53:35.874"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.872" endtime="20220919 15:53:35.874"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.871" endtime="20220919 15:53:35.875"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'NOR', 'year': 2019, 'rate': 2.12302}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.876" level="INFO">${variables} = {'traffic_data': {'country': 'NOR', 'year': 2019, 'rate': 2.12302}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.875" endtime="20220919 15:53:35.876"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.876" level="INFO">traffic_data = {'country': 'NOR', 'year': 2019, 'rate': 2.12302}</msg>
+<msg timestamp="20220919 15:53:35.877" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.876" endtime="20220919 15:53:35.877"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.875" endtime="20220919 15:53:35.877"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.875" endtime="20220919 15:53:35.877"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'NLD', 'year': 2019, 'rate': 3.98313}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.878" level="INFO">${variables} = {'traffic_data': {'country': 'NLD', 'year': 2019, 'rate': 3.98313}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.878" endtime="20220919 15:53:35.878"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.879" level="INFO">traffic_data = {'country': 'NLD', 'year': 2019, 'rate': 3.98313}</msg>
+<msg timestamp="20220919 15:53:35.879" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.878" endtime="20220919 15:53:35.879"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.877" endtime="20220919 15:53:35.880"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.877" endtime="20220919 15:53:35.880"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'MLT', 'year': 2019, 'rate': 4.10715}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.880" level="INFO">${variables} = {'traffic_data': {'country': 'MLT', 'year': 2019, 'rate': 4.10715}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.880" endtime="20220919 15:53:35.881"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.881" level="INFO">traffic_data = {'country': 'MLT', 'year': 2019, 'rate': 4.10715}</msg>
+<msg timestamp="20220919 15:53:35.881" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.881" endtime="20220919 15:53:35.881"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.880" endtime="20220919 15:53:35.882"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.880" endtime="20220919 15:53:35.882"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'MDV', 'year': 2019, 'rate': 1.6277}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.883" level="INFO">${variables} = {'traffic_data': {'country': 'MDV', 'year': 2019, 'rate': 1.6277}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.882" endtime="20220919 15:53:35.883"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.883" level="INFO">traffic_data = {'country': 'MDV', 'year': 2019, 'rate': 1.6277}</msg>
+<msg timestamp="20220919 15:53:35.884" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.883" endtime="20220919 15:53:35.884"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.882" endtime="20220919 15:53:35.884"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.882" endtime="20220919 15:53:35.884"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'LUX', 'year': 2019, 'rate': 4.07499}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.885" level="INFO">${variables} = {'traffic_data': {'country': 'LUX', 'year': 2019, 'rate': 4.07499}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.885" endtime="20220919 15:53:35.885"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.886" level="INFO">traffic_data = {'country': 'LUX', 'year': 2019, 'rate': 4.07499}</msg>
+<msg timestamp="20220919 15:53:35.886" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.885" endtime="20220919 15:53:35.886"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.884" endtime="20220919 15:53:35.886"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.884" endtime="20220919 15:53:35.886"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'LCA', 'year': 2008, 'rate': 3.52918}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.887" level="INFO">${variables} = {'traffic_data': {'country': 'LCA', 'year': 2008, 'rate': 3.52918}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.887" endtime="20220919 15:53:35.887"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.888" level="INFO">traffic_data = {'country': 'LCA', 'year': 2008, 'rate': 3.52918}</msg>
+<msg timestamp="20220919 15:53:35.889" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.888" endtime="20220919 15:53:35.889"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.887" endtime="20220919 15:53:35.889"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.886" endtime="20220919 15:53:35.889"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'KIR', 'year': 2019, 'rate': 1.92481}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.890" level="INFO">${variables} = {'traffic_data': {'country': 'KIR', 'year': 2019, 'rate': 1.92481}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.890" endtime="20220919 15:53:35.890"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.891" level="INFO">traffic_data = {'country': 'KIR', 'year': 2019, 'rate': 1.92481}</msg>
+<msg timestamp="20220919 15:53:35.891" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.890" endtime="20220919 15:53:35.891"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.889" endtime="20220919 15:53:35.891"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.889" endtime="20220919 15:53:35.892"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'JPN', 'year': 2019, 'rate': 3.59908}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.892" level="INFO">${variables} = {'traffic_data': {'country': 'JPN', 'year': 2019, 'rate': 3.59908}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.892" endtime="20220919 15:53:35.892"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.893" level="INFO">traffic_data = {'country': 'JPN', 'year': 2019, 'rate': 3.59908}</msg>
+<msg timestamp="20220919 15:53:35.893" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.893" endtime="20220919 15:53:35.893"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.892" endtime="20220919 15:53:35.894"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.892" endtime="20220919 15:53:35.894"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'ISR', 'year': 2019, 'rate': 3.90874}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.895" level="INFO">${variables} = {'traffic_data': {'country': 'ISR', 'year': 2019, 'rate': 3.90874}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.894" endtime="20220919 15:53:35.895"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.895" level="INFO">traffic_data = {'country': 'ISR', 'year': 2019, 'rate': 3.90874}</msg>
+<msg timestamp="20220919 15:53:35.895" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.895" endtime="20220919 15:53:35.896"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.894" endtime="20220919 15:53:35.896"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.894" endtime="20220919 15:53:35.896"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'ISL', 'year': 2019, 'rate': 2.04915}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.897" level="INFO">${variables} = {'traffic_data': {'country': 'ISL', 'year': 2019, 'rate': 2.04915}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.896" endtime="20220919 15:53:35.897"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.897" level="INFO">traffic_data = {'country': 'ISL', 'year': 2019, 'rate': 2.04915}</msg>
+<msg timestamp="20220919 15:53:35.898" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.897" endtime="20220919 15:53:35.898"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.896" endtime="20220919 15:53:35.898"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.896" endtime="20220919 15:53:35.898"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'IRL', 'year': 2019, 'rate': 3.13364}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.899" level="INFO">${variables} = {'traffic_data': {'country': 'IRL', 'year': 2019, 'rate': 3.13364}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.899" endtime="20220919 15:53:35.899"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.899" level="INFO">traffic_data = {'country': 'IRL', 'year': 2019, 'rate': 3.13364}</msg>
+<msg timestamp="20220919 15:53:35.900" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.899" endtime="20220919 15:53:35.900"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.898" endtime="20220919 15:53:35.900"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.898" endtime="20220919 15:53:35.900"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'GTM', 'year': 2006, 'rate': 4.61297}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.901" level="INFO">${variables} = {'traffic_data': {'country': 'GTM', 'year': 2006, 'rate': 4.61297}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.901" endtime="20220919 15:53:35.901"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.902" level="INFO">traffic_data = {'country': 'GTM', 'year': 2006, 'rate': 4.61297}</msg>
+<msg timestamp="20220919 15:53:35.902" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.901" endtime="20220919 15:53:35.902"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.901" endtime="20220919 15:53:35.902"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.900" endtime="20220919 15:53:35.902"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'GRD', 'year': 2014, 'rate': 4.59137}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.903" level="INFO">${variables} = {'traffic_data': {'country': 'GRD', 'year': 2014, 'rate': 4.59137}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.903" endtime="20220919 15:53:35.903"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.904" level="INFO">traffic_data = {'country': 'GRD', 'year': 2014, 'rate': 4.59137}</msg>
+<msg timestamp="20220919 15:53:35.905" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.904" endtime="20220919 15:53:35.905"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.903" endtime="20220919 15:53:35.905"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.903" endtime="20220919 15:53:35.905"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'GBR', 'year': 2019, 'rate': 3.21187}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.906" level="INFO">${variables} = {'traffic_data': {'country': 'GBR', 'year': 2019, 'rate': 3.21187}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.906" endtime="20220919 15:53:35.906"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.907" level="INFO">traffic_data = {'country': 'GBR', 'year': 2019, 'rate': 3.21187}</msg>
+<msg timestamp="20220919 15:53:35.907" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.906" endtime="20220919 15:53:35.907"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.906" endtime="20220919 15:53:35.907"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.905" endtime="20220919 15:53:35.908"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'FSM', 'year': 2019, 'rate': 0.15972}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.908" level="INFO">${variables} = {'traffic_data': {'country': 'FSM', 'year': 2019, 'rate': 0.15972}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.908" endtime="20220919 15:53:35.908"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.909" level="INFO">traffic_data = {'country': 'FSM', 'year': 2019, 'rate': 0.15972}</msg>
+<msg timestamp="20220919 15:53:35.909" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.909" endtime="20220919 15:53:35.910"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.908" endtime="20220919 15:53:35.910"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.908" endtime="20220919 15:53:35.910"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'FIN', 'year': 2019, 'rate': 3.88637}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.911" level="INFO">${variables} = {'traffic_data': {'country': 'FIN', 'year': 2019, 'rate': 3.88637}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.910" endtime="20220919 15:53:35.911"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.911" level="INFO">traffic_data = {'country': 'FIN', 'year': 2019, 'rate': 3.88637}</msg>
+<msg timestamp="20220919 15:53:35.912" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.911" endtime="20220919 15:53:35.912"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.910" endtime="20220919 15:53:35.912"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.910" endtime="20220919 15:53:35.912"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'EST', 'year': 2019, 'rate': 4.46408}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.913" level="INFO">${variables} = {'traffic_data': {'country': 'EST', 'year': 2019, 'rate': 4.46408}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.912" endtime="20220919 15:53:35.913"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.913" level="INFO">traffic_data = {'country': 'EST', 'year': 2019, 'rate': 4.46408}</msg>
+<msg timestamp="20220919 15:53:35.914" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.913" endtime="20220919 15:53:35.914"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.912" endtime="20220919 15:53:35.914"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.912" endtime="20220919 15:53:35.914"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'ESP', 'year': 2019, 'rate': 3.91405}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.915" level="INFO">${variables} = {'traffic_data': {'country': 'ESP', 'year': 2019, 'rate': 3.91405}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.915" endtime="20220919 15:53:35.915"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.916" level="INFO">traffic_data = {'country': 'ESP', 'year': 2019, 'rate': 3.91405}</msg>
+<msg timestamp="20220919 15:53:35.916" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.915" endtime="20220919 15:53:35.916"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.915" endtime="20220919 15:53:35.917"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.915" endtime="20220919 15:53:35.917"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'DNK', 'year': 2019, 'rate': 3.69833}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.917" level="INFO">${variables} = {'traffic_data': {'country': 'DNK', 'year': 2019, 'rate': 3.69833}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.917" endtime="20220919 15:53:35.918"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.918" level="INFO">traffic_data = {'country': 'DNK', 'year': 2019, 'rate': 3.69833}</msg>
+<msg timestamp="20220919 15:53:35.918" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.918" endtime="20220919 15:53:35.919"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.917" endtime="20220919 15:53:35.919"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.917" endtime="20220919 15:53:35.919"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'DEU', 'year': 2019, 'rate': 3.78353}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.920" level="INFO">${variables} = {'traffic_data': {'country': 'DEU', 'year': 2019, 'rate': 3.78353}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.919" endtime="20220919 15:53:35.920"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.920" level="INFO">traffic_data = {'country': 'DEU', 'year': 2019, 'rate': 3.78353}</msg>
+<msg timestamp="20220919 15:53:35.921" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.920" endtime="20220919 15:53:35.921"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.919" endtime="20220919 15:53:35.921"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.919" endtime="20220919 15:53:35.921"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'CYP', 'year': 2013, 'rate': 4.9831}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.922" level="INFO">${variables} = {'traffic_data': {'country': 'CYP', 'year': 2013, 'rate': 4.9831}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.921" endtime="20220919 15:53:35.922"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.922" level="INFO">traffic_data = {'country': 'CYP', 'year': 2013, 'rate': 4.9831}</msg>
+<msg timestamp="20220919 15:53:35.923" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.922" endtime="20220919 15:53:35.923"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.921" endtime="20220919 15:53:35.923"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.921" endtime="20220919 15:53:35.923"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'CHE', 'year': 2019, 'rate': 2.24644}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.924" level="INFO">${variables} = {'traffic_data': {'country': 'CHE', 'year': 2019, 'rate': 2.24644}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.924" endtime="20220919 15:53:35.924"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.925" level="INFO">traffic_data = {'country': 'CHE', 'year': 2019, 'rate': 2.24644}</msg>
+<msg timestamp="20220919 15:53:35.925" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.924" endtime="20220919 15:53:35.925"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.924" endtime="20220919 15:53:35.925"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.923" endtime="20220919 15:53:35.925"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'AUT', 'year': 2019, 'rate': 4.86592}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.926" level="INFO">${variables} = {'traffic_data': {'country': 'AUT', 'year': 2019, 'rate': 4.86592}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.926" endtime="20220919 15:53:35.926"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.927" level="INFO">traffic_data = {'country': 'AUT', 'year': 2019, 'rate': 4.86592}</msg>
+<msg timestamp="20220919 15:53:35.927" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.926" endtime="20220919 15:53:35.927"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.926" endtime="20220919 15:53:35.928"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.926" endtime="20220919 15:53:35.928"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'AUS', 'year': 2019, 'rate': 4.93914}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.928" level="INFO">${variables} = {'traffic_data': {'country': 'AUS', 'year': 2019, 'rate': 4.93914}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.928" endtime="20220919 15:53:35.929"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.929" level="INFO">traffic_data = {'country': 'AUS', 'year': 2019, 'rate': 4.93914}</msg>
+<msg timestamp="20220919 15:53:35.930" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.929" endtime="20220919 15:53:35.930"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.928" endtime="20220919 15:53:35.930"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.928" endtime="20220919 15:53:35.930"/>
+</iter>
+<iter>
+<var name="${payload}">{'country': 'ATG', 'year': 2019, 'rate': 0.0}</var>
+<kw name="Save work item payload">
+<arg>${payload}</arg>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${variables}</var>
+<arg>${WORK_ITEM_NAME}=${payload}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20220919 15:53:35.931" level="INFO">${variables} = {'traffic_data': {'country': 'ATG', 'year': 2019, 'rate': 0.0}}</msg>
+<status status="PASS" starttime="20220919 15:53:35.931" endtime="20220919 15:53:35.931"/>
+</kw>
+<kw name="Create Output Work Item" library="RPA.Robocorp.WorkItems">
+<arg>variables=${variables}</arg>
+<arg>save=True</arg>
+<doc>Create a new output work item with optional variables and files.</doc>
+<msg timestamp="20220919 15:53:35.931" level="INFO">traffic_data = {'country': 'ATG', 'year': 2019, 'rate': 0.0}</msg>
+<msg timestamp="20220919 15:53:35.932" level="INFO">Saved into output file: D:\RPA\producer-consumer\devdata\work-items-out\run-2\work-items.json</msg>
+<status status="PASS" starttime="20220919 15:53:35.931" endtime="20220919 15:53:35.932"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.930" endtime="20220919 15:53:35.932"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:35.930" endtime="20220919 15:53:35.932"/>
+</iter>
+<status status="PASS" starttime="20220919 15:53:35.862" endtime="20220919 15:53:35.932"/>
+</for>
+<status status="PASS" starttime="20220919 15:53:35.861" endtime="20220919 15:53:35.933"/>
+</kw>
+<status status="PASS" starttime="20220919 15:53:21.545" endtime="20220919 15:53:35.933"/>
+</test>
+<doc>Inhuman Insurance, Inc. Artificial Intelligence System robot.
+Produces traffic data work items.</doc>
+<status status="PASS" starttime="20220919 15:53:20.825" endtime="20220919 15:53:35.934"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tasks</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="Producer">Producer</stat>
+</suite>
+</statistics>
+<errors>
+<msg timestamp="20220919 15:53:21.545" level="WARN">No input work items file found: None</msg>
+</errors>
+</robot>
